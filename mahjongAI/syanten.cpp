@@ -1,4 +1,5 @@
 #include "syanten.h"
+#include <algorithm>
 
 //コンストラクタ
 Syanten::Syanten(){
@@ -114,17 +115,20 @@ int Syanten::NormalSyanten()
 			tehai[i] += 2;
 		}
 	}
-    //フーロなしなら
-	
-	if(fuurosuu == 0){
-        tmpresult=checkNormalSyanten();   //頭無しと仮定して計算
-		if(tmpresult < result){
-			result=tmpresult;
-		}
+
+    tmpresult=checkNormalSyanten();   //頭無しと仮定して計算
+	if(tmpresult < result){
+		result=tmpresult;
 	}
 
-
 	return result;
+}
+
+int Syanten::AnySyanten() {
+	int res = NormalSyanten();
+	res = min(res, TiitoituSyanten());
+	res = min(res, KokusiSyanten());
+	return res;
 }
 
 //Checkシャンテン
@@ -168,9 +172,9 @@ int Syanten::checkNormalSyanten()
 			ptt++;
 		}
 	}
-	if(ptm+ptt>4){
-		while(ptm+ptt>4) ptt--;
-	}
+	
+	while (ptm + ptt > 4 - fuurosuu && ptt > 0) ptt--;
+	while (ptm + ptt > 4 - fuurosuu) ptm--;
 	
 	return 8-ptm*2-ptt;
 }
